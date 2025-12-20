@@ -24,9 +24,19 @@ st.title("🌍 World Bank Dashboard – Life Expectancy Analysis")
 st.sidebar.header("🎛 Bộ lọc")
 
 countries = sorted(df["country"].dropna().unique())
+countries = ["🌍 World (Average)"] + countries
+
 selected_country = st.sidebar.selectbox("Chọn quốc gia", countries)
 
-df_country = df[df["country"] == selected_country]
+if selected_country == "🌍 World (Average)":
+    df_country = (
+        df
+        .groupby("year", as_index=False)
+        .mean(numeric_only=True)
+    )
+else:
+    df_country = df[df["country"] == selected_country]
+
 
 min_year = int(df_country["year"].min())
 max_year = int(df_country["year"].max())
